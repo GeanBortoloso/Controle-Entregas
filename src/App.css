@@ -27,16 +27,25 @@ body {
 
 /* Cabeçalho com Logo */
 .app-header {
-    background-color: var(--color-surface);
+    /* Opção 1: Fundo Laranja (padrão) */
+    background-color: var(--color-primary);
+
+    /* Opção 2: Fundo Preto (descomente a linha abaixo e comente a de cima) */
+    /* background-color: var(--color-text); */
+    
     text-align: center;
-    padding: 1.5rem; /* Aumentado o espaçamento */
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .app-logo {
-    max-width: 280px; /* Aumentado o tamanho do logo */
+    max-width: 280px;
     height: auto;
+    /* Estilos para cantos suaves e contorno */
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border-radius: 0.75rem; /* Cantos arredondados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar efeito de contorno */
 }
 
 /* Container Principal */
@@ -85,7 +94,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .deliveries-list {
@@ -220,15 +229,19 @@ h3 {
 .form-group label { font-size: 0.875rem; font-weight: 500; color: var(--color-text-light); }
 
 .form-group input[type="text"],
-.form-group input[type="number"] {
+.form-group input[type="number"],
+.form-group select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
     box-sizing: border-box;
     transition: border-color 0.2s;
+    font-family: inherit;
+    font-size: 1rem;
 }
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--color-primary);
 }
@@ -397,7 +410,7 @@ h3 {
     color: var(--color-text-light);
 }
 
-.date-filter {
+.date-filter, .text-filter {
     padding: 0.5rem;
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
@@ -405,6 +418,11 @@ h3 {
     font-family: inherit;
     height: 38px; /* Alinha altura com o botão de filtro */
     box-sizing: border-box;
+    font-size: 0.875rem;
+}
+
+.text-filter {
+    width: 200px;
 }
 
 .filter-dropdown {
@@ -476,4 +494,8 @@ h3 {
 
 .dropdown-item input {
     margin-right: 0.5rem;
+}
+
+.export-button {
+    color: var(--color-text);
 }

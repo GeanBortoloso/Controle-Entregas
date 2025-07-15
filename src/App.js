@@ -6,6 +6,11 @@ function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
+// --- Listas Pré-definidas ---
+const DRIVERS = ["Lucas", "Wagner", "Ueriqui", "Natanael", "Flavio"];
+const VEHICLES = ["MONTANA (SPD-2G30)", "MONTANA (SPD-2G90)", "STRADA (BCJ-1F38)", "STRADA (RRY-9F54)", "STRADA (QBV-4372)", "FAN 160 (QCV-4G37)", "FAN 160 (QCI-0679)", "FAN 160 (QCV-4G27)", "FAN 160 (RAL-3G00)"];
+
+    
 // --- Componentes de Ícones ---
 const TruckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17H6v-6l7-4v6h5v6h-4z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 17H4a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2h-2" /></svg>;
 const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>;
@@ -15,6 +20,7 @@ const XIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox=
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>;
 const ArchiveIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>;
 const ArrowLeftIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>;
+const ExportIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>;
 const Spinner = () => <div className="spinner"></div>;
 
 // --- Componente do Cabeçalho ---
@@ -56,7 +62,8 @@ export default function App() {
     const [passwordModalOpen, setPasswordModalOpen] = useState(false);
     const [passwordInput, setPasswordInput] = useState('');
     const [showArchive, setShowArchive] = useState(false);
-    const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
+    const [filterDate, setFilterDate] = useState('');
+    const [clientNameFilter, setClientNameFilter] = useState('');
     const [statusFilters, setStatusFilters] = useState({
         'Pendente': true,
         'Em Rota': true,
@@ -174,15 +181,15 @@ export default function App() {
 
     const renderView = () => {
         if (showArchive) {
-            return <SecretArchive archive={archive} onBack={goBack} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} />;
+            return <SecretArchive archive={archive} onBack={goBack} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} clientNameFilter={clientNameFilter} setClientNameFilter={setClientNameFilter} />;
         }
         switch (view) {
             case 'addDelivery':
-                return <AddDeliveryForm onSave={handleStartNewDelivery} onBack={goBack} />;
+                return <AddDeliveryForm onSave={handleStartNewDelivery} onBack={goBack} drivers={DRIVERS} vehicles={VEHICLES} />;
             case 'addClient':
                 return <AddClientForm onSave={handleSaveClientRoute} onBack={goBack} routeNumber={currentRouteNumber} totalRoutes={totalRoutes} />;
             default:
-                return <DeliveryList deliveries={deliveries} onAdd={() => setView('addDelivery')} onUpdateStatus={handleUpdateStatus} onDelete={handleDelete} requestConfirmation={requestConfirmation} onShowArchive={handleShowArchive} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} />;
+                return <DeliveryList deliveries={deliveries} onAdd={() => setView('addDelivery')} onUpdateStatus={handleUpdateStatus} onDelete={handleDelete} requestConfirmation={requestConfirmation} onShowArchive={handleShowArchive} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} clientNameFilter={clientNameFilter} setClientNameFilter={setClientNameFilter} />;
         }
     };
 
@@ -308,20 +315,67 @@ function FilterDropdown({ title, options, selectedOptions, onSelectionChange }) 
 }
 
 // --- Componente do Arquivo Secreto ---
-function SecretArchive({ archive, onBack, filterDate, setFilterDate, statusFilters, setStatusFilters }) {
+function SecretArchive({ archive, onBack, filterDate, setFilterDate, statusFilters, setStatusFilters, clientNameFilter, setClientNameFilter }) {
     const filteredArchive = useMemo(() => {
         return archive.filter(d => {
             const isDateMatch = !filterDate || d.createdAt.split('T')[0] === filterDate;
             const isStatusMatch = statusFilters[d.status];
-            return isDateMatch && isStatusMatch;
+            const isClientMatch = !clientNameFilter || d.clientName.toLowerCase().includes(clientNameFilter.toLowerCase());
+            return isDateMatch && isStatusMatch && isClientMatch;
         });
-    }, [archive, filterDate, statusFilters]);
+    }, [archive, filterDate, statusFilters, clientNameFilter]);
+
+    const handleExportCSV = () => {
+        if (!filteredArchive.length) {
+            alert("Não há dados para exportar com os filtros atuais.");
+            return;
+        }
+
+        const headers = [
+            "Cliente", "Status", "Entregador", "Veículo", "Item", "Quantidade", 
+            "Data de Criação", "Início da Rota", "Fim da Rota", "Tempo Total de Rota"
+        ];
+
+        // Escapa aspas duplas dentro dos valores e usa ponto e vírgula como delimitador
+        const escapeCSV = (value) => `"${String(value).replace(/"/g, '""')}"`;
+
+        const csvRows = [
+            headers.join(';'), // header row
+            ...filteredArchive.map(row => {
+                const values = [
+                    escapeCSV(row.clientName),
+                    escapeCSV(row.status),
+                    escapeCSV(row.driver),
+                    escapeCSV(row.vehicle),
+                    escapeCSV(row.itemType),
+                    row.itemQuantity,
+                    escapeCSV(new Date(row.createdAt).toLocaleString('pt-BR')),
+                    escapeCSV(row.startTime ? new Date(row.startTime).toLocaleString('pt-BR') : 'N/A'),
+                    escapeCSV(row.endTime ? new Date(row.endTime).toLocaleString('pt-BR') : 'N/A'),
+                    escapeCSV(row.totalTime || 'N/A')
+                ];
+                return values.join(';');
+            })
+        ];
+
+        const csvString = "\uFEFF" + csvRows.join('\n'); // Adiciona BOM para compatibilidade com Excel
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'arquivo_entregas.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     return (
         <div>
             <header className="list-header">
                 <button onClick={onBack} className="back-button"><ArrowLeftIcon /></button>
                 <h1>Arquivo de Entregas</h1>
+                <button onClick={handleExportCSV} className="icon-button export-button" title="Exportar para CSV"><ExportIcon /></button>
             </header>
             <div className="filters-container">
                  <div className="filter-group">
@@ -331,6 +385,10 @@ function SecretArchive({ archive, onBack, filterDate, setFilterDate, statusFilte
                  <div className="filter-group">
                     <label>Filtrar por Status</label>
                     <FilterDropdown title="Status" options={{'Pendente': true, 'Em Rota': true, 'Finalizada': true, 'Cancelada': true}} selectedOptions={statusFilters} onSelectionChange={setStatusFilters} />
+                </div>
+                <div className="filter-group">
+                    <label>Filtrar por Cliente</label>
+                    <input type="text" value={clientNameFilter} onChange={(e) => setClientNameFilter(e.target.value)} placeholder="Nome do cliente..." className="text-filter" />
                 </div>
             </div>
             <div className="deliveries-list">
@@ -384,14 +442,15 @@ function ConfirmationModal({ isOpen, message, onConfirm, onCancel, confirmType }
 }
 
 
-function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConfirmation, onShowArchive, filterDate, setFilterDate, statusFilters, setStatusFilters }) {
+function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConfirmation, onShowArchive, filterDate, setFilterDate, statusFilters, setStatusFilters, clientNameFilter, setClientNameFilter }) {
     const filteredDeliveries = useMemo(() => {
         return deliveries.filter(d => {
             const isDateMatch = !filterDate || d.createdAt.split('T')[0] === filterDate;
             const isStatusMatch = statusFilters[d.status];
-            return isDateMatch && isStatusMatch;
+            const isClientMatch = !clientNameFilter || d.clientName.toLowerCase().includes(clientNameFilter.toLowerCase());
+            return isDateMatch && isStatusMatch && isClientMatch;
         });
-    }, [deliveries, filterDate, statusFilters]);
+    }, [deliveries, filterDate, statusFilters, clientNameFilter]);
 
     const sortedDeliveries = useMemo(() => {
         return [...filteredDeliveries].sort((a, b) => {
@@ -426,6 +485,10 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
                  <div className="filter-group">
                     <label>Filtrar por Status</label>
                     <FilterDropdown title="Status" options={{'Pendente': true, 'Em Rota': true, 'Finalizada': true, 'Cancelada': true}} selectedOptions={statusFilters} onSelectionChange={setStatusFilters} />
+                </div>
+                <div className="filter-group">
+                    <label>Filtrar por Cliente</label>
+                    <input type="text" value={clientNameFilter} onChange={(e) => setClientNameFilter(e.target.value)} placeholder="Nome do cliente..." className="text-filter" />
                 </div>
             </div>
             <div className="deliveries-list">
@@ -472,9 +535,9 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
     );
 }
 
-function AddDeliveryForm({ onSave, onBack }) {
-    const [driver, setDriver] = useState('');
-    const [vehicle, setVehicle] = useState('');
+function AddDeliveryForm({ onSave, onBack, drivers, vehicles }) {
+    const [driver, setDriver] = useState(drivers[0] || '');
+    const [vehicle, setVehicle] = useState(vehicles[0] || '');
     const [routeCount, setRouteCount] = useState(1);
     const [status, setStatus] = useState('Pendente');
 
@@ -494,11 +557,15 @@ function AddDeliveryForm({ onSave, onBack }) {
             <form onSubmit={handleSubmit} className="form-body">
                 <div className="form-group">
                     <label htmlFor="driver">Entregador</label>
-                    <input type="text" id="driver" value={driver} onChange={e => setDriver(e.target.value)} required />
+                    <select id="driver" value={driver} onChange={e => setDriver(e.target.value)} required>
+                        {drivers.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="vehicle">Veículo (Placa)</label>
-                    <input type="text" id="vehicle" value={vehicle} onChange={e => setVehicle(e.target.value)} required />
+                     <select id="vehicle" value={vehicle} onChange={e => setVehicle(e.target.value)} required>
+                        {vehicles.map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="routeCount">Quantidade de Rotas</label>
