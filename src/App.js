@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import './App.css'; // Importa os nossos novos estilos
 
@@ -7,11 +6,6 @@ function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-=======
-import React, { useState, useMemo } from 'react';
-import './App.css'; // Importa os nossos novos estilos
-
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 // --- Componentes de Ícones ---
 const TruckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17H6v-6l7-4v6h5v6h-4z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 17H4a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2h-2" /></svg>;
 const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>;
@@ -19,10 +13,7 @@ const PlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewB
 const CheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>;
 const XIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>;
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>;
-<<<<<<< HEAD
 const ArchiveIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>;
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 const ArrowLeftIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>;
 const Spinner = () => <div className="spinner"></div>;
 
@@ -38,16 +29,30 @@ function Header() {
 // --- Componente Principal ---
 export default function App() {
     const [view, setView] = useState('list');
-    const [deliveries, setDeliveries] = useState([]);
-<<<<<<< HEAD
-    const [archive, setArchive] = useState([]);
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
+    
+    // --- Lógica de Persistência com localStorage ---
+    const [deliveries, setDeliveries] = useState(() => {
+        const savedDeliveries = localStorage.getItem('deliveries');
+        return savedDeliveries ? JSON.parse(savedDeliveries) : [];
+    });
+    const [archive, setArchive] = useState(() => {
+        const savedArchive = localStorage.getItem('archive');
+        return savedArchive ? JSON.parse(savedArchive) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('deliveries', JSON.stringify(deliveries));
+    }, [deliveries]);
+
+    useEffect(() => {
+        localStorage.setItem('archive', JSON.stringify(archive));
+    }, [archive]);
+    // --- Fim da Lógica de Persistência ---
+
     const [newDeliveryInfo, setNewDeliveryInfo] = useState(null);
     const [totalRoutes, setTotalRoutes] = useState(0);
     const [currentRouteNumber, setCurrentRouteNumber] = useState(1);
     const [modalState, setModalState] = useState({ isOpen: false, message: '', action: null, confirmType: 'danger' });
-<<<<<<< HEAD
     const [passwordModalOpen, setPasswordModalOpen] = useState(false);
     const [passwordInput, setPasswordInput] = useState('');
     const [showArchive, setShowArchive] = useState(false);
@@ -62,11 +67,6 @@ export default function App() {
 
     const handleStartNewDelivery = (deliveryData) => {
         setNewDeliveryInfo({ ...deliveryData, batchId: generateUniqueId() });
-=======
-
-    const handleStartNewDelivery = (deliveryData) => {
-        setNewDeliveryInfo({ ...deliveryData, batchId: crypto.randomUUID() });
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         setTotalRoutes(deliveryData.routeCount);
         setCurrentRouteNumber(1);
         setView('addClient');
@@ -74,16 +74,11 @@ export default function App() {
 
     const handleSaveClientRoute = (clientData) => {
         const finalDeliveryData = {
-<<<<<<< HEAD
             id: generateUniqueId(),
-=======
-            id: crypto.randomUUID(),
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
             ...newDeliveryInfo,
             ...clientData,
             createdAt: new Date().toISOString(),
             status: newDeliveryInfo.status,
-<<<<<<< HEAD
             startTime: newDeliveryInfo.status === 'Em Rota' ? new Date().toISOString() : null,
             endTime: null,
             totalTime: null,
@@ -92,10 +87,6 @@ export default function App() {
         setDeliveries(prev => [...prev, finalDeliveryData]);
         setArchive(prev => [...prev, finalDeliveryData]);
 
-=======
-        };
-        setDeliveries(prev => [...prev, finalDeliveryData]);
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         if (currentRouteNumber < totalRoutes) {
             setCurrentRouteNumber(prev => prev + 1);
         } else {
@@ -107,7 +98,6 @@ export default function App() {
     };
 
     const handleUpdateStatus = (id, newStatus) => {
-<<<<<<< HEAD
         let updatedDelivery = null;
         const newDeliveries = deliveries.map(d => {
             if (d.id === id) {
@@ -140,27 +130,17 @@ export default function App() {
 
     const handleDelete = (id) => {
         // Apenas remove da lista de entregas ativas, mantém no arquivo
-=======
-        setDeliveries(prev => prev.map(d => d.id === id ? { ...d, status: newStatus } : d));
-    };
-
-    const handleDelete = (id) => {
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         setDeliveries(prev => prev.filter(d => d.id !== id));
     };
 
     const goBack = () => {
         setView('list');
-<<<<<<< HEAD
         setShowArchive(false);
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         setNewDeliveryInfo(null);
         setTotalRoutes(0);
         setCurrentRouteNumber(1);
     };
 
-<<<<<<< HEAD
     const handleShowArchive = () => {
         setPasswordModalOpen(true);
     };
@@ -177,8 +157,6 @@ export default function App() {
         }
     };
 
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
     const requestConfirmation = (message, action, confirmType = 'danger') => {
         setModalState({ isOpen: true, message, action, confirmType });
     };
@@ -195,23 +173,16 @@ export default function App() {
     };
 
     const renderView = () => {
-<<<<<<< HEAD
         if (showArchive) {
             return <SecretArchive archive={archive} onBack={goBack} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} />;
         }
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         switch (view) {
             case 'addDelivery':
                 return <AddDeliveryForm onSave={handleStartNewDelivery} onBack={goBack} />;
             case 'addClient':
                 return <AddClientForm onSave={handleSaveClientRoute} onBack={goBack} routeNumber={currentRouteNumber} totalRoutes={totalRoutes} />;
             default:
-<<<<<<< HEAD
                 return <DeliveryList deliveries={deliveries} onAdd={() => setView('addDelivery')} onUpdateStatus={handleUpdateStatus} onDelete={handleDelete} requestConfirmation={requestConfirmation} onShowArchive={handleShowArchive} filterDate={filterDate} setFilterDate={setFilterDate} statusFilters={statusFilters} setStatusFilters={setStatusFilters} />;
-=======
-                return <DeliveryList deliveries={deliveries} onAdd={() => setView('addDelivery')} onUpdateStatus={handleUpdateStatus} onDelete={handleDelete} requestConfirmation={requestConfirmation} />;
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
         }
     };
 
@@ -227,7 +198,6 @@ export default function App() {
                     onCancel={handleModalCancel}
                     confirmType={modalState.confirmType}
                 />
-<<<<<<< HEAD
                 <PasswordModal
                     isOpen={passwordModalOpen}
                     onClose={() => {
@@ -238,14 +208,11 @@ export default function App() {
                     password={passwordInput}
                     setPassword={setPasswordInput}
                 />
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
             </main>
         </>
     );
 }
 
-<<<<<<< HEAD
 // --- Componente do Modal de Senha ---
 function PasswordModal({ isOpen, onClose, onSubmit, password, setPassword }) {
     if (!isOpen) return null;
@@ -399,8 +366,6 @@ function SecretArchive({ archive, onBack, filterDate, setFilterDate, statusFilte
     );
 }
 
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 // --- Componente do Pop-up de Confirmação ---
 function ConfirmationModal({ isOpen, message, onConfirm, onCancel, confirmType }) {
     if (!isOpen) return null;
@@ -419,7 +384,6 @@ function ConfirmationModal({ isOpen, message, onConfirm, onCancel, confirmType }
 }
 
 
-<<<<<<< HEAD
 function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConfirmation, onShowArchive, filterDate, setFilterDate, statusFilters, setStatusFilters }) {
     const filteredDeliveries = useMemo(() => {
         return deliveries.filter(d => {
@@ -435,15 +399,6 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
             return (statusOrder[a.status] - statusOrder[b.status]) || (new Date(b.createdAt) - new Date(a.createdAt));
         });
     }, [filteredDeliveries]);
-=======
-function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConfirmation }) {
-    const sortedDeliveries = useMemo(() => {
-        return [...deliveries].sort((a, b) => {
-            const statusOrder = { 'Em Rota': 1, 'Pendente': 2, 'Finalizada': 3, 'Cancelada': 4 };
-            return (statusOrder[a.status] - statusOrder[b.status]) || (new Date(b.createdAt) - new Date(a.createdAt));
-        });
-    }, [deliveries]);
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -459,7 +414,6 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
         <div>
             <header className="list-header">
                 <h1>Controle de Entregas</h1>
-<<<<<<< HEAD
                 <div className="header-controls">
                     <button onClick={onShowArchive} className="icon-button" title="Arquivo Secreto"><ArchiveIcon /></button>
                 </div>
@@ -474,9 +428,6 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
                     <FilterDropdown title="Status" options={{'Pendente': true, 'Em Rota': true, 'Finalizada': true, 'Cancelada': true}} selectedOptions={statusFilters} onSelectionChange={setStatusFilters} />
                 </div>
             </div>
-=======
-            </header>
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
             <div className="deliveries-list">
                 {sortedDeliveries.length > 0 ? sortedDeliveries.map(d => (
                     <div key={d.id} className={`delivery-card ${getStatusClass(d.status)}`}>
@@ -504,24 +455,15 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
                                             <button onClick={() => requestConfirmation('Tem certeza que deseja cancelar este pedido?', () => onUpdateStatus(d.id, 'Cancelada'), 'danger')} className="icon-button btn-warning" title="Cancelar Pedido"><XIcon /></button>
                                         </>
                                     )}
-<<<<<<< HEAD
                                     <button onClick={() => requestConfirmation('Tem certeza que deseja remover esta entrega da lista ativa?', () => onDelete(d.id), 'danger')} className="icon-button btn-danger" title="Remover da Lista"><TrashIcon /></button>
-=======
-                                    <button onClick={() => requestConfirmation('Tem certeza que deseja apagar esta entrega? Esta ação não pode ser desfeita.', () => onDelete(d.id), 'danger')} className="icon-button btn-danger" title="Apagar Entrega"><TrashIcon /></button>
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
                                 </div>
                             </div>
                         </div>
                     </div>
                 )) : (
                     <div className="empty-state">
-<<<<<<< HEAD
                         <h3>Nenhuma entrega encontrada para os filtros selecionados.</h3>
                         <p>Clique no botão '+' para adicionar uma nova entrega.</p>
-=======
-                        <h3>Nenhuma entrega encontrada.</h3>
-                        <p>Clique no botão '+' para adicionar a primeira!</p>
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
                     </div>
                 )}
             </div>

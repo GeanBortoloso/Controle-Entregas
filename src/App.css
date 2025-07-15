@@ -11,11 +11,7 @@
     --color-danger-dark: #c82333;
     --color-success: #28a745;
     --color-success-dark: #218838;
-<<<<<<< HEAD
     --color-em-rota: #007bff;
-=======
-    --color-em-rota: #f2a900;
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 }
 
 body {
@@ -55,10 +51,7 @@ h1 {
     font-size: 1.875rem;
     font-weight: 700;
     color: var(--color-text);
-<<<<<<< HEAD
     margin: 0;
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 }
 
 h2 {
@@ -99,10 +92,7 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-<<<<<<< HEAD
     margin-top: 1.5rem;
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 }
 
 /* Card de Entrega */
@@ -302,11 +292,7 @@ h3 {
 .status-toggle button:last-of-type.active { background-color: var(--color-em-rota); }
 .item-type-toggle button.active { background-color: var(--color-text); }
 
-<<<<<<< HEAD
 /* Modal de Confirmação e Senha */
-=======
-/* Modal de Confirmação */
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -355,7 +341,6 @@ h3 {
 .btn-confirm-success:hover {
     background-color: var(--color-success-dark);
 }
-<<<<<<< HEAD
 
 .modal-content h3 {
     margin-top: 0;
@@ -492,5 +477,3 @@ h3 {
 .dropdown-item input {
     margin-right: 0.5rem;
 }
-=======
->>>>>>> fac3731b5969b2c5d5f931bb19d88985964592f7
