@@ -7,10 +7,29 @@ function generateUniqueId() {
 }
 
 // --- Listas Pré-definidas ---
-const DRIVERS = ["Lucas", "Wagner", "Ueriqui", "Natanael", "Flavio"];
-const VEHICLES = ["MONTANA (SPD-2G30)", "MONTANA (SPD-2G90)", "STRADA (BCJ-1F38)", "STRADA (RRY-9F54)", "STRADA (QBV-4372)", "FAN 160 (QCV-4G37)", "FAN 160 (QCI-0679)", "FAN 160 (QCV-4G27)", "FAN 160 (RAL-3G00)"];
+const DRIVER_VEHICLE_MAPPING = [
+    { driver: "Lucas", defaultVehicle: "FAN 160 (QCV-4G27)" },
+    { driver: "Vagner", defaultVehicle: "FAN 160 (QCV-4G37)" },
+    { driver: "Ueriqui", defaultVehicle: "FAN 160 (QCI-0679)" },
+    { driver: "Natanael", defaultVehicle: "FAN 125 (QBX -2312)" },
+    { driver: "Flavio", defaultVehicle: " " },
+    { driver: "Vyctor", defaultVehicle: "FAN 160 (RAL-3G00)" },
+];
 
-    
+const ALL_VEHICLES = [
+    "MONTANA (SPD-2G30)", 
+    "MONTANA (SPD-2G90)", 
+    "STRADA (BCJ-1F38)", 
+    "STRADA (RRY-9F54)", 
+    "STRADA (QBV-4372)", 
+    "FAN 160 (QCV-4G37)", 
+    "FAN 160 (QCI-0679)", 
+    "FAN 160 (QCV-4G27)", 
+    "FAN 160 (RAL-3G00)", 
+    "FAN 125 (QBX -2312)"
+];
+
+
 // --- Componentes de Ícones ---
 const TruckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17H6v-6l7-4v6h5v6h-4z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 17H4a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2h-2" /></svg>;
 const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>;
@@ -70,7 +89,7 @@ export default function App() {
         'Finalizada': true,
         'Cancelada': true,
     });
-    const password = "1234"; // Senha para o arquivo secreto
+    const password = "0408"; // Senha para o arquivo secreto
 
     const handleStartNewDelivery = (deliveryData) => {
         setNewDeliveryInfo({ ...deliveryData, batchId: generateUniqueId() });
@@ -185,7 +204,7 @@ export default function App() {
         }
         switch (view) {
             case 'addDelivery':
-                return <AddDeliveryForm onSave={handleStartNewDelivery} onBack={goBack} drivers={DRIVERS} vehicles={VEHICLES} />;
+                return <AddDeliveryForm onSave={handleStartNewDelivery} onBack={goBack} />;
             case 'addClient':
                 return <AddClientForm onSave={handleSaveClientRoute} onBack={goBack} routeNumber={currentRouteNumber} totalRoutes={totalRoutes} />;
             default:
@@ -336,11 +355,10 @@ function SecretArchive({ archive, onBack, filterDate, setFilterDate, statusFilte
             "Data de Criação", "Início da Rota", "Fim da Rota", "Tempo Total de Rota"
         ];
 
-        // Escapa aspas duplas dentro dos valores e usa ponto e vírgula como delimitador
         const escapeCSV = (value) => `"${String(value).replace(/"/g, '""')}"`;
 
         const csvRows = [
-            headers.join(';'), // header row
+            headers.join(';'), // Use ponto e vírgula como separador
             ...filteredArchive.map(row => {
                 const values = [
                     escapeCSV(row.clientName),
@@ -535,11 +553,18 @@ function DeliveryList({ deliveries, onAdd, onUpdateStatus, onDelete, requestConf
     );
 }
 
-function AddDeliveryForm({ onSave, onBack, drivers, vehicles }) {
-    const [driver, setDriver] = useState(drivers[0] || '');
-    const [vehicle, setVehicle] = useState(vehicles[0] || '');
+function AddDeliveryForm({ onSave, onBack }) {
+    const [driver, setDriver] = useState(DRIVER_VEHICLE_MAPPING[0]?.driver || '');
+    const [vehicle, setVehicle] = useState(DRIVER_VEHICLE_MAPPING[0]?.defaultVehicle || '');
     const [routeCount, setRouteCount] = useState(1);
     const [status, setStatus] = useState('Pendente');
+
+    useEffect(() => {
+        const selectedMapping = DRIVER_VEHICLE_MAPPING.find(item => item.driver === driver);
+        if (selectedMapping) {
+            setVehicle(selectedMapping.defaultVehicle);
+        }
+    }, [driver]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -558,13 +583,13 @@ function AddDeliveryForm({ onSave, onBack, drivers, vehicles }) {
                 <div className="form-group">
                     <label htmlFor="driver">Entregador</label>
                     <select id="driver" value={driver} onChange={e => setDriver(e.target.value)} required>
-                        {drivers.map(d => <option key={d} value={d}>{d}</option>)}
+                        {DRIVER_VEHICLE_MAPPING.map(item => <option key={item.driver} value={item.driver}>{item.driver}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="vehicle">Veículo (Placa)</label>
                      <select id="vehicle" value={vehicle} onChange={e => setVehicle(e.target.value)} required>
-                        {vehicles.map(v => <option key={v} value={v}>{v}</option>)}
+                        {ALL_VEHICLES.map(v => <option key={v} value={v}>{v}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
