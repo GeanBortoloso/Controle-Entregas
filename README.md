@@ -1,10 +1,8 @@
-# Sistema de Controle de Entregas - Central Peças e Baterias
-
-![Logo da Central Peças e Baterias](public/logo.png)
+# Sistema de Controle de Entregas - 
 
 ## 📖 Sobre o Projeto
 
-Este projeto é um sistema de controle de entregas desenvolvido em React, projetado para gerenciar e monitorar as rotas de entrega da Central Peças e Baterias. A aplicação permite o cadastro de levas de entrega, o acompanhamento do status de cada pedido e a manutenção de um histórico completo para consultas e exportação de dados.
+Este projeto é um sistema de controle de entregas desenvolvido em React, projetado para gerenciar e monitorar as rotas de entrega. A aplicação permite o cadastro de levas de entrega, o acompanhamento do status de cada pedido e a manutenção de um histórico completo para consultas e exportação de dados.
 
 O sistema foi desenvolvido para ser executado localmente no navegador, utilizando `localStorage` para persistência de dados, o que significa que todas as informações ficam salvas na máquina do usuário, mesmo após fechar ou recarregar a página.
 
