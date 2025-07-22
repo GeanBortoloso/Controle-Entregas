@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Estilos globais
 import Header from './components/Header';
@@ -19,7 +18,6 @@ export default function App() {
     const [view, setView] = useState('list');
     
     // --- Lógica de Persistência com localStorage (Será substituída pela API) ---
-    // Por enquanto, mantemos para que o app continue funcionando
     const [deliveries, setDeliveries] = useState(() => {
         const savedDeliveries = localStorage.getItem('deliveries');
         return savedDeliveries ? JSON.parse(savedDeliveries) : [];
@@ -54,10 +52,6 @@ export default function App() {
         'Cancelada': true,
     });
 
-    // Funções de manipulação de dados - futuras chamadas à API
-    // Por enquanto, elas ainda operam no estado local (para manter a funcionalidade)
-    // MAS, no futuro, você substituirá a lógica interna por chamadas ao `deliveryService`
-
     const handleStartNewDelivery = (deliveryData) => {
         setNewDeliveryInfo({ ...deliveryData, batchId: generateUniqueId() });
         setTotalRoutes(deliveryData.routeCount);
@@ -76,8 +70,7 @@ export default function App() {
             endTime: null,
             totalTime: null,
         };
-        // TODO: Chamar deliveryService.createDelivery(finalDeliveryData) AQUI
-        // e, em seguida, atualizar os estados `deliveries` e `archive` com o retorno da API.
+
         setDeliveries(prev => [...prev, finalDeliveryData]);
         setArchive(prev => [...prev, finalDeliveryData]);
 
@@ -114,8 +107,7 @@ export default function App() {
             return d;
         });
 
-        // TODO: Chamar deliveryService.updateDeliveryStatus(id, newStatus) AQUI
-        // e, em seguida, atualizar os estados `deliveries` e `archive` com o retorno da API.
+
         setDeliveries(newDeliveries);
 
         if (updatedDelivery) {
@@ -125,8 +117,7 @@ export default function App() {
     };
 
     const handleDelete = (id) => {
-        // TODO: Chamar deliveryService.deleteDelivery(id) AQUI
-        // e, em seguida, atualizar os estados `deliveries` com o retorno da API.
+
         setDeliveries(prev => prev.filter(d => d.id !== id));
     };
 

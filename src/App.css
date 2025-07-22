@@ -1,8 +1,8 @@
 /* Estilos Globais e Paleta de Cores */
 :root {
-    --color-primary: #f2a900; /* Amarelo do logo */
+    --color-primary: #f2a900;
     --color-primary-dark: #d99800;
-    --color-text: #000000; /* Cinza escuro do logo */
+    --color-text: #000000;
     --color-text-light: #000000;
     --color-background: #f8f9fa;
     --color-surface: #ffffff;
@@ -27,11 +27,8 @@ body {
 
 /* Cabeçalho com Logo */
 .app-header {
-    /* Opção 1: Fundo Laranja (padrão) */
-    background-color: var(--color-primary);
 
-    /* Opção 2: Fundo Preto (descomente a linha abaixo e comente a de cima) */
-    /* background-color: var(--color-text); */
+    background-color: var(--color-primary);
     
     text-align: center;
     padding: 1.5rem;
@@ -44,8 +41,8 @@ body {
     /* Estilos para cantos suaves e contorno */
     padding: 1rem;
     background-color: var(--color-surface);
-    border-radius: 0.75rem; /* Cantos arredondados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar efeito de contorno */
+    border-radius: 0.75rem; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Container Principal */
@@ -416,7 +413,7 @@ h3 {
     border-radius: 0.375rem;
     background-color: white;
     font-family: inherit;
-    height: 38px; /* Alinha altura com o botão de filtro */
+    height: 38px;
     box-sizing: border-box;
     font-size: 0.875rem;
 }

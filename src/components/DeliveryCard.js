@@ -1,5 +1,5 @@
 import React from 'react';
-import { TruckIcon, UserIcon, CheckIcon, XIcon, TrashIcon } from '../assets/icons'; // Importe os ícones
+import { TruckIcon, UserIcon, CheckIcon, XIcon, TrashIcon } from '../assets/icons';
 
 function DeliveryCard({ delivery, onUpdateStatus, onDelete, requestConfirmation }) {
     const getStatusClass = (status) => {

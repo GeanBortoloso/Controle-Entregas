@@ -20,7 +20,7 @@ function AddClientForm({ onSave, onBack, routeNumber, totalRoutes }) {
 
         if (clientName && selectedItems && itemQuantity > 0) {
             setIsSaving(true);
-            setTimeout(() => { // Simula um atraso para salvar (será a chamada à API)
+            setTimeout(() => {
                 onSave({ clientName, itemType: selectedItems, itemQuantity: parseInt(itemQuantity) });
                 if (routeNumber < totalRoutes) {
                     setClientName('');
